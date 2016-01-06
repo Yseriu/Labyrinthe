@@ -7,23 +7,25 @@ import random
 #crée une matrice de nbLignes lignes sur nbColonnes colonnes en mettant valeurParDefaut
 # dans chacune des cases
 def Matrice(nbLignes,nbColonnes,valeurParDefaut=0):
-    pass
+    return [[valeurParDefaut for _ in range(nbColonnes)] for _ in range(nbLignes)]
 
 # retourne le nombre de ligne de la matrice
 def getNbLignes(matrice):
-    pass
+    return len(matrice)
+
 
 #retourne le nombre de colonnes de la matrice
 def getNbColonnes(matrice):
-    pass
+    return len(matrice[0])
 
 # retourne la valeur qui se trouve à la ligne et la colonne passées en paramètres
-def getVal(matrice,ligne,colonne):
-    pass
+def getVal(matrice,lig,col):
+    return matrice[lig][col]
 
 # place la valeur à l'emplacement ligne colonne de la matrice
-def setVal(matrice,ligne,colonne,valeur):
-    pass
+def setVal(matrice,lig,col,val):
+    matrice[lig][col] = val
+    return matrice
 
 
 
