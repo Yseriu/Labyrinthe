@@ -11,27 +11,28 @@ import os
 # à chaque joueur en restant équitable
 # un joueur courant est choisi et la phase est initialisée
 def Labyrinthe(nbJoueurs=2,nbTresors=24, nbTresorMax=0):
-    pass
+    return {'phase' : 0, 'current' : random.randint(1, nbJoueurs+1), 'joueurs' : Joueurs(nbJoueurs, nbTresors, nbTresorMax), 'plateau' : Matrice(9, 9, Carte( True, True, False, False)), 'carteAJouer' : None}
 
 # retourne la matrice représentant le plateau de jeu
 def getPlateau(labyrinthe):
-    pass
+    return labyrinthe['plateau']
 
 # retourne le nombre de joueurs engagés dans la partie
 def getNbJoueurs(labyrinthe):
-    pass
+    return labyrinthe['joueurs']['NbJoueurs']
 
 # indique quel est le joueur courant (celui qui doit jouer)
 def getJoueurCourant(labyrinthe):
-    pass
+    return labyrinthe['current']
 
 # change de joueur courant
 def changerJoueurCourant(labyrinthe):
-    pass
+    labyrinthe['current'] = (labyrinthe['current'] + 1) if labyrinthe['current'] < getNbJoueurs(labyrinthe) else 1
+    return labyrinthe
 
 # retourne la phase du jeu
 def getPhase(labyrinthe):
-    pass
+    return labyrinthe['phase']
 
 # change la phase de jeu
 def changerPhase(labyrinthe):
@@ -43,35 +44,36 @@ def getNbTresors(labyrinthe):
 
 # retourne la structures qui gèrent les joueurs et leurs trésors
 def getLesJoueurs(labyrinthe):
-    pass
+    return labyrinthe['joueurs']
 
 # diminue le nombre de trésors de 1
 def decTresor(labyrinthe):
-    pass
+    labyrinthe['joueurs']['NbTresors'] -= 1
 
-# met à jour la structure qui gère les joueurs en enlevant le trésor qui le joueur
+# met à jour la structure qui gère les joueurs en enlevant le trésor que le joueur
 # courant vient de trouver
 def joueurCourantTrouveTresor(labyrinthe):
-    pass
+    tresorTrouve(labyrinthe['joueurs'], getJoueurCourant(labyrinthe))
 
 # retourne le nombre de trésors restant à trouver pour le joueur numJoueur
 def nbTresorsRestantsJoueur(labyrinthe,numJoueur):
-    pass
+    nbTresorsRestants(labyrinthe['joueurs'], numJoueur)
 
 # enlève le trésor numTresor sur la carte qui se trouve sur la case lin,col du plateau
 # si le trésor ne s'y trouve pas la fonction ne fait rien
 def prendreTresorL(labyrinthe,lin,col,numTresor):
-    pass
+	if getTresor(getVal(lin, col)) ==  numTresor:
+		prendreTresor(getVal(lin, col))
 
 # enlève le joueur courant de la carte qui se trouve sur la case lin,col du plateau
 # si le joueur ne s'y trouve pas la fonction ne fait rien
 def prendreJoueurCourant(labyrinthe,lin,col):
-    pass        
+    prendrePionL(labyrinthe, lin, col, getJoueurCourant(labyrinthe))        
 
 # pose le joueur courant de la carte qui se trouve sur la case lin,col du plateau
 # si le joueur s'y trouve déjà la fonction ne fait rien
 def poserJoueurCourant(labyrinthe,lin,col):
-    pass
+    poserPion(getVal(labyrinthe['plateau'], lin, col), getJoueurCourant(labyrinthe))
 
 # retourne la carte amovible supplémentaire que le joueur courant doit joueur
 def getCarteAJouer(labyrinthe):
@@ -99,24 +101,25 @@ def jouerCarte(labyrinthe,direction,rangee):
 # Cette fonction tourne la carte à jouer dans le sens indiqué 
 # en paramètre (H horaire A antihoraire)
 def tournerCarte(labyrinthe,sens='H'):
-    pass
+    tournerHoraire(labyrinte['carteAJouer']) if sens == 'H' else tournerAntiHoraire(labyrinte['carteAJouer'])
 
 # retourne le numéro du trésor à trouver pour le joueur courant
 def getTresorCourant(labyrinthe):
-    pass
+    return prochainTresor(getLesJoueurs(labyrinthe), getJoueurCourant(labyrinthe))
 
 # retourne sous la forme d'un couple (lin,col) la position du trésor à trouver 
 # pour le joueur courant sur le plateau
 def getCoordonneesTresorCourant(labyrinthe):
     pass
 
-# retourne sous la forme d'un couple (lin,col) la position dule joueur courant sur le plateau
+# retourne sous la forme d'un couple (lin,col) la position du joueur courant sur le plateau
 def getCoordonneesJoueurCourant(labyrinthe):
     pass
 
 # prend le pion numJoueur sur sur la carte se trouvant en position lin,col du plateau
 def prendrePionL(labyrinthe,lin,col,numJoueur):
-    pass
+    if possedePion(getVal(getPlateau(labyrinthe), lin, col), numJoueur):
+		prendrePion(getVal(getPlateau(labyrinthe), lin, col), numJoueur)
 
 # pose le pion numJoueur sur sur la carte se trouvant en position lin,col du plateau
 def poserPionL(labyrinthe,lin,col,joueur):
