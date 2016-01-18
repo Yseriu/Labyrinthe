@@ -11,7 +11,7 @@ import os
 # à chaque joueur en restant équitable
 # un joueur courant est choisi et la phase est initialisée
 def Labyrinthe(nbJoueurs=2,nbTresors=24, nbTresorMax=0):
-    l = {'phase' : 0, 'current' : random.randint(1, nbJoueurs+1), 'joueurs' : Joueurs(nbJoueurs, nbTresors, nbTresorMax), 'plateau' : Matrice(7, 7, Carte( True, True, False, False)), 'carteAJouer' : None}
+    l = {'phase' : 0, 'current' : random.randint(1, nbJoueurs), 'joueurs' : Joueurs(nbJoueurs, nbTresors, nbTresorMax), 'plateau' : Matrice(7, 7, None), 'carteAJouer' : None}
     initPlateau(l)
     return l
 
@@ -20,15 +20,25 @@ def initPlateau(labyrinthe):
     setVal(getPlateau(labyrinthe), 6, 0, Carte(True, True, False, False))
     setVal(getPlateau(labyrinthe), 0, 6, Carte(False, False, True, True))
     setVal(getPlateau(labyrinthe), 6, 6, Carte(False, True, True, False))
+    t = 1
     for i in [2, 4]:
-        setVal(getPlateau(labyrinthe), 0, i, Carte(False, False, False, True))
-        setVal(getPlateau(labyrinthe), 6, i, Carte(False, True, False, False))
-        setVal(getPlateau(labyrinthe), i, 6, Carte(False, False, True, False))
-        setVal(getPlateau(labyrinthe), i, 0, Carte(True, False, False, False))
-    setVal(getPlateau(labyrinthe), 2, 2, Carte(False, False, False, True))
-    setVal(getPlateau(labyrinthe), 2, 4, Carte(True, False, False, False))
-    setVal(getPlateau(labyrinthe), 4, 2, Carte(False, False, True, False))
-    setVal(getPlateau(labyrinthe), 4, 4, Carte(False, True, False, False))
+        setVal(getPlateau(labyrinthe), 0, i, Carte(False, False, False, True, t))
+        setVal(getPlateau(labyrinthe), 6, i, Carte(False, True, False, False, t+1))
+        setVal(getPlateau(labyrinthe), i, 6, Carte(False, False, True, False, t+2))
+        setVal(getPlateau(labyrinthe), i, 0, Carte(True, False, False, False, t+3))
+        t += 4
+    t += 1
+    setVal(getPlateau(labyrinthe), 2, 2, Carte(False, False, False, True, t))
+    setVal(getPlateau(labyrinthe), 2, 4, Carte(True, False, False, False, t+1))
+    setVal(getPlateau(labyrinthe), 4, 2, Carte(False, False, True, False, t+2))
+    setVal(getPlateau(labyrinthe), 4, 4, Carte(False, True, False, False, t+3))
+    t += 4
+    amov = creerCartesAmovibles(t, getNbTresors(labyrinthe))
+    for i in range(getNbLignes(getPlateau(labyrinthe))):
+        for j in range(getNbColonnes(getPlateau(labyrinthe))):
+            if getVal(getPlateau(labyrinthe), i, j) == None:
+                setVal(getPlateau(labyrinthe), i, j, amov.pop(0))
+    setCarteAJouer(labyrinthe, amov[0])
     return labyrinthe
 
 # retourne la matrice représentant le plateau de jeu
@@ -61,8 +71,8 @@ def changerPhase(labyrinthe):
 def getNbTresors(labyrinthe):
     nbTresorRest=0
     for i in range(getNbJoueurs(labyrinthe)):
-		nbTresorRest+=nbTresorsRestants(getLesJoueurs,i)
-	return nbTresorRest
+        nbTresorRest+=nbTresorsRestants(getLesJoueurs(labyrinthe),i)
+    return nbTresorRest
 
 # retourne la structures qui gèrent les joueurs et leurs trésors
 def getLesJoueurs(labyrinthe):
@@ -101,11 +111,27 @@ def poserJoueurCourant(labyrinthe,lin,col):
 def getCarteAJouer(labyrinthe):
     return labyrinthe['carteAJouer']
 
+def setCarteAJouer(labyrinthe, c):
+    labyrinthe['carteAJouer'] = c
+    return labyrinthe
+
 # fonction utilitaire qui permet de créer les cartes amovibles du jeu en y positionnant
 # aléatoirement nbTresor trésors
 # la fonction retourne la liste, mélangée aléatoirement, des cartes ainsi créées
 def creerCartesAmovibles(tresorDebut,nbTresors):
-    pass
+    l = []
+    for _ in range(16):
+        l.append(tourneAleatoire(Carte(False, False, True, True)))
+    for _ in range(6):
+        l.append(tourneAleatoire(Carte(False, True, True, True)))
+    for _ in range(12):
+        l.append(tourneAleatoire(Carte(False, True, False, True)))
+    l = sorted(l, key=lambda k: random.randint(0, 100))
+    for i in range(tresorDebut, nbTresors):
+        mettreTresor(l[i], i)
+    l = sorted(l, key=lambda k: random.randint(0, 100))
+    print(l)
+    return l
 
 # fonction qui retourne True si le coup proposé correspond au coup interdit
 # elle retourne False sinon
@@ -133,16 +159,16 @@ def getTresorCourant(labyrinthe):
 # pour le joueur courant sur le plateau
 def getCoordonneesTresorCourant(labyrinthe):
     for i in range(getNbColonnes(getPlateau(labyrinthe))):
-		for j in range(getNbLignes(getPlateau(labyrinthe))):
-			if getTresor(getVal(getPlateau(labyrinthe),i,j))==getTresorCourant(labyrinthe):
-				return (i,j)
+        for j in range(getNbLignes(getPlateau(labyrinthe))):
+            if getTresor(getVal(getPlateau(labyrinthe),i,j))==getTresorCourant(labyrinthe):
+                return (i,j)
 
 # retourne sous la forme d'un couple (lin,col) la position du joueur courant sur le plateau
 def getCoordonneesJoueurCourant(labyrinthe):
     for i in range(getNbColonnes(getPlateau(labyrinthe))):
-		for j in range(getNbLignes(getPlateau(labyrinthe))):
-			if possedePion(getVal(getPlateau(labyrinthe),i,j),getJoueurCourant(labyrinthe)):
-				return (i,j)
+        for j in range(getNbLignes(getPlateau(labyrinthe))):
+            if possedePion(getVal(getPlateau(labyrinthe),i,j),getJoueurCourant(labyrinthe)):
+                return (i,j)
 
 
 # prend le pion numJoueur sur sur la carte se trouvant en position lin,col du plateau

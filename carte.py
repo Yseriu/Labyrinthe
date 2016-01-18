@@ -54,11 +54,11 @@ def possedePion(c,pion):
 
 # retourne le codage de la liste des pions
 def getPions(c):
-    pass
+    return c['pions']
 
 # affecte les pions de la cartes en utilisant directement le codage de la liste des pions
 def setPions(c,pions):
-    pass
+    c['pions'] = pions
 
 # retourne la valeur du trésor qui se trouve sur la carte (0 si pas de trésor)
 def getTresor(c):
@@ -110,7 +110,9 @@ def tournerAntiHoraire(c):
 
 # faire tourner la carte dans nombre de tour aléatoire
 def tourneAleatoire(c):
-    pass
+    for _ in range(random.randint(0, 4)):
+        tournerHoraire(c)
+    return c
 
 # code les murs sous la forme d'un entier dont le codage binaire 
 # est de la forme bNbEbSbO où bN, bE, bS et bO valent 
@@ -120,10 +122,10 @@ def tourneAleatoire(c):
 # le code obtenu permet d'obtenir l'indice du caractère semi-graphique
 # correspondant à la carte dans la liste listeCartes au début de ce fichier
 def coderMurs(c):
-    x = 8 if murNord(c) else 0
-    x +=  4 if murEst(c) else 0
-    x +=  2 if murSud(c) else 0
-    x +=  1 if murOuest(c) else 0
+    x = 1 if murNord(c) else 0
+    x +=  2 if murEst(c) else 0
+    x +=  4 if murSud(c) else 0
+    x +=  8 if murOuest(c) else 0
     return x
 
 # positionne les mur d'une carte en fonction du code décrit précédemment

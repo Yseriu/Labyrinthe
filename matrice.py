@@ -24,6 +24,7 @@ def getVal(mat,lig,col):
 
 # place la valeur à l'emplacement ligne colonne de la matrice
 def setVal(matrice,lig,col,val):
+    #print(val)
     matrice[lig][col] = val
     return matrice
 

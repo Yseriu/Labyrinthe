@@ -9,7 +9,7 @@ import random
 #  * found : la liste des trésor : valeur -> boolean trouvé ou non
 
 def Joueurs( nbJoueurs=2, nbTresors=24, nbTresorMax=0):
-    nbTr = min(nbTresors, nbTresorMax*nbJoueurs) if nbTresorMax != 0 else nbTresors
+    nbTr = max((min(nbTresors, nbTresorMax*nbJoueurs) if nbTresorMax != 0 else nbTresors), 13)
     return {'NbJoueurs' : nbJoueurs, 'owner' : [0] * nbTr, 'Found' : [False] * nbTr}
 
 # attribue effectivement les trésors de manière aléatoire

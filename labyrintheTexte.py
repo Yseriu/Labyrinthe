@@ -110,7 +110,20 @@ def animationChemin(lmt,chemin, joueur,pause=0.1):
 # dans le cas où x vaut une des quatre autres valeur, y doit valoir 1, 3 ou 5
 # c'est à dire le numéro de la ligne ou de la colonne où insérer la carte
 def saisirOrdre(lmt):
-    pass
+    valide = False
+    while not valide:
+        x = input('Que faire maintenant ? [T]ourner ou inserer [N,E,S,O] ?')
+        if len(x) > 0:
+            if x.lower() == 't': return (x, 0)
+            elif x in 'neso': 
+                y = input('Dans quelle ' + ('ligne' if x in 'eo' else 'colonne') + ' ?')
+                try:
+                    y = int(y)
+                    if y in [1, 3, 5]:
+                        return (x, y)
+                except ValueError:
+                    pass
+        print('Ce n\'est pas une réponse valide')
  
 # permet de saisir les coordonées de la case de destination choisie par le joueur courant
 # on ne sort de la fonction qui ces coordonées sont valides et que le déplacement est possible
