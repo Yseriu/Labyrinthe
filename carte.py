@@ -11,11 +11,11 @@ listeCartes=['Ø','╦','╣','╗','╩','═','╝','Ø','╠','╔','║','Ø
 # pions donne la liste des pions qui seront posés sur la carte (un pion est un entier entre 1 et 4)
 def Carte( nord, est, sud, ouest, tresor=0, pions=[]):
     return {'nord': nord,
-			'est': est,
-			'sud': sud,
-			'ouest': ouest,
-			'tresor': tresor,
-			'pions': set(pions)}
+            'est': est,
+            'sud': sud,
+            'ouest': ouest,
+            'tresor': tresor,
+            'pions': set(pions)}
 # retourne un booléen indiquant si la carte est valide ou non c'est à dire qu'elle a un ou deux murs
 def estValide(c):
     x = 1 if murNord(c) else 0
@@ -66,12 +66,12 @@ def getTresor(c):
 
 # enlève le trésor qui se trouve sur la carte et retourne la valeur de ce trésor
 def prendreTresor(c):
-	return mettreTresor(c, 0)
+    return mettreTresor(c, 0)
 
 # met le trésor passé en paramètre sur la carte et retourne la valeur de l'ancien trésor
 def mettreTresor(c,tresor):
     x = c['tresor']
-	c['tresor'] = tresor
+    c['tresor'] = tresor
     return x
 
 # enlève le pion passé en paramètre de la carte. Si le pion n'y était pas ne fait rien
@@ -129,18 +129,18 @@ def coderMurs(c):
 # positionne les mur d'une carte en fonction du code décrit précédemment
 def decoderMurs(c,code):
     if code > 8:
-		code -= 8
-		c['nord'] = True
-	if code > 4:
-		code -= 4
-		c['est'] = True
-	if code > 2:
-		code -= 2
-		c['sud'] = True
-	if code > 1:
-		code -= 1
-		c['ouest'] = True
-	return c
+        code -= 8
+        c['nord'] = True
+    if code > 4:
+        code -= 4
+        c['est'] = True
+    if code > 2:
+        code -= 2
+        c['sud'] = True
+    if code > 1:
+        code -= 1
+        c['ouest'] = True
+    return c
 
 # fournit le caractère semi graphique correspondant à la carte (voir la variable listeCartes au début de ce script)
 def toChar(c):
@@ -149,18 +149,22 @@ def toChar(c):
 # suppose que la carte2 est placée au nord de la carte1 et indique
 # s'il y a un passage entre ces deux cartes en passant par le nord
 def passageNord(carte1,carte2):
-    return !murNord(carte1) and !murSud(carte2)
+    if carte1 == None or carte2 == None: return False
+    return not murNord(carte1) and not murSud(carte2)
 # suppose que la carte2 est placée au sud de la carte1 et indique
 # s'il y a un passage entre ces deux cartes en passant par le sud
 def passageSud(carte1,carte2):
-    return !murSud(carte1) and !murNord(carte2)
+    if carte1 == None or carte2 == None: return False
+    return not murSud(carte1) and not murNord(carte2)
 
 # suppose que la carte2 est placée à l'ouest de la carte1 et indique
 # s'il y a un passage entre ces deux cartes en passant par l'ouest
 def passageOuest(carte1,carte2):
-    return !murOuest(carte1) and !murEst(carte2)
+    if carte1 == None or carte2 == None: return False
+    return not murOuest(carte1) and not murEst(carte2)
 
 # suppose que la carte2 est placée à l'est de la carte1 et indique
 # s'il y a un passage entre ces deux cartes en passant par l'est
 def passageEst(carte1,carte2):
-    return !murEst(carte1) and !murOuest(carte2)
+    if carte1 == None or carte2 == None: return False
+    return not murEst(carte1) and not murOuest(carte2)

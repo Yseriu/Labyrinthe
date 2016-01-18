@@ -117,7 +117,16 @@ def saisirOrdre(lmt):
 # la fonction retourne le chemin entre la case où se trouve le joueur courant et la case de 
 # destination qu'il a choisi
 def saisirDeplacement(lmt):
-    pass
+    possible = False
+    while not possible:
+        x = input()
+        if len(x) >= 3:
+            x, y = x[0], x[2]
+            if x in range(1, 8) and y in range(1, 8):
+                x -= 1
+                y -= 1
+                # vérifier la possibilité de parcourir ce chemin
+                possible = accessible(getLabyrinthe(lmt), getCoordonneesJoueurCourant(getLabyrinthe(lmt))[0], getCoordonneesJoueurCourant(getLabyrinthe(lmt))[0], x, y)
         
 # demarre la partie en mode texte
 def demarrer(lmt):
@@ -157,24 +166,26 @@ def demarrer(lmt):
 
 
 # programme principal
-print("Bienvenue dans le jeu du labyrinthe")
-# saisie du nombre de joueurs
-nbJoueurs=input("Combien de joueurs? ")
-while nbJoueurs not in ['1','2','3','4']:
-    print("Le nombre de joueurs doit être compris entre 1 et 4")
+if __name__ == '__main__':
+    print("Bienvenue dans le jeu du labyrinthe")
+    # saisie du nombre de joueurs
     nbJoueurs=input("Combien de joueurs? ")
+    while nbJoueurs not in ['1','2','3','4']:
+        print("Le nombre de joueurs doit être compris entre 1 et 4")
+        nbJoueurs=input("Combien de joueurs? ")
 
-# saisie du nombre de trésors par joueur
-nbTresors=input("Combien de trésors à trouver par joueur (0 pour le maximum possible)?")
-ok=True
-try:
-    nbTresorsInt=int(nbTresors)
-except:
-    nbTresorsInt=0
-    print("Le nombre maximum de trésor a été choisi")
-#initialisation du labyrinthe
-l=Labyrinthe(int(nbJoueurs),nbTresorMax=nbTresorsInt)
-#initialisation de l'affichage
-g=LabyrintheTexte(l)
-#démarrage de la partie
-demarrer(g)
+    # saisie du nombre de trésors par joueur
+    nbTresors=input("Combien de trésors à trouver par joueur (0 pour le maximum possible)?")
+    ok=True
+    try:
+        nbTresorsInt=int(nbTresors)
+    except:
+        nbTresorsInt=0
+        print("Le nombre maximum de trésor a été choisi")
+    #initialisation du labyrinthe
+    l=Labyrinthe(int(nbJoueurs),nbTresorMax=nbTresorsInt)
+    #initialisation de l'affichage
+    g=LabyrintheTexte()
+    setLabyrinthe(g, l)
+    #démarrage de la partie
+    demarrer(g)

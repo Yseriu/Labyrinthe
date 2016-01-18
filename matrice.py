@@ -13,14 +13,14 @@ def Matrice(nbLignes,nbColonnes,valeurParDefaut=0):
 def getNbLignes(matrice):
     return len(matrice)
 
-
 #retourne le nombre de colonnes de la matrice
 def getNbColonnes(matrice):
     return len(matrice[0])
 
 # retourne la valeur qui se trouve à la ligne et la colonne passées en paramètres
-def getVal(matrice,lig,col):
-    return matrice[lig][col]
+def getVal(mat,lig,col):
+    if lig < 0 or lig >= getNbLignes(mat) or col < 0 or col >= getNbColonnes(mat): return None
+    return mat[lig][col]
 
 # place la valeur à l'emplacement ligne colonne de la matrice
 def setVal(matrice,lig,col,val):

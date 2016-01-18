@@ -34,9 +34,9 @@ def prochainTresor(joueurs,numJoueur):
 # enlève le trésor courant du joueur numJoueur et retourne le nombre de trésor
 # qu'il reste à trouver pour ce joueur
 def tresorTrouve(joueurs,numJoueur):
-	i = prochainTresor(joueurs, numJoueur)
-	if i != None:
-		joueurs['owner'][i] = 0
+    i = prochainTresor(joueurs, numJoueur)
+    if i != None:
+        joueurs['owner'][i] = 0
     return nbTresorsRestants(joueurs, numJoueur)
 
 # retourne le nombre de trésors qu'il reste à trouver pour le joueur numJoueur

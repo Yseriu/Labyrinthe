@@ -11,7 +11,25 @@ import os
 # à chaque joueur en restant équitable
 # un joueur courant est choisi et la phase est initialisée
 def Labyrinthe(nbJoueurs=2,nbTresors=24, nbTresorMax=0):
-    return {'phase' : 0, 'current' : random.randint(1, nbJoueurs+1), 'joueurs' : Joueurs(nbJoueurs, nbTresors, nbTresorMax), 'plateau' : Matrice(9, 9, Carte( True, True, False, False)), 'carteAJouer' : None}
+    l = {'phase' : 0, 'current' : random.randint(1, nbJoueurs+1), 'joueurs' : Joueurs(nbJoueurs, nbTresors, nbTresorMax), 'plateau' : Matrice(7, 7, Carte( True, True, False, False)), 'carteAJouer' : None}
+    initPlateau(l)
+    return l
+
+def initPlateau(labyrinthe):
+    setVal(getPlateau(labyrinthe), 0, 0, Carte(True, False, False, True))
+    setVal(getPlateau(labyrinthe), 6, 0, Carte(True, True, False, False))
+    setVal(getPlateau(labyrinthe), 0, 6, Carte(False, False, True, True))
+    setVal(getPlateau(labyrinthe), 6, 6, Carte(False, True, True, False))
+    for i in [2, 4]:
+        setVal(getPlateau(labyrinthe), 0, i, Carte(False, False, False, True))
+        setVal(getPlateau(labyrinthe), 6, i, Carte(False, True, False, False))
+        setVal(getPlateau(labyrinthe), i, 6, Carte(False, False, True, False))
+        setVal(getPlateau(labyrinthe), i, 0, Carte(True, False, False, False))
+    setVal(getPlateau(labyrinthe), 2, 2, Carte(False, False, False, True))
+    setVal(getPlateau(labyrinthe), 2, 4, Carte(True, False, False, False))
+    setVal(getPlateau(labyrinthe), 4, 2, Carte(False, False, True, False))
+    setVal(getPlateau(labyrinthe), 4, 4, Carte(False, True, False, False))
+    return labyrinthe
 
 # retourne la matrice représentant le plateau de jeu
 def getPlateau(labyrinthe):
@@ -36,11 +54,12 @@ def getPhase(labyrinthe):
 
 # change la phase de jeu
 def changerPhase(labyrinthe):
-    pass
+    labyrinthe['phase'] = (labyrinthe['phase'] + 1) if labyrinthe['phase'] < 2 else 1
+    return labyrinthe
 
 # indique combien de trésors il reste dans le labyrinthe
 def getNbTresors(labyrinthe):
-	nbTresorRest=0
+    nbTresorRest=0
     for i in range(getNbJoueurs(labyrinthe)):
 		nbTresorRest+=nbTresorsRestants(getLesJoueurs,i)
 	return nbTresorRest
@@ -65,8 +84,8 @@ def nbTresorsRestantsJoueur(labyrinthe,numJoueur):
 # enlève le trésor numTresor sur la carte qui se trouve sur la case lin,col du plateau
 # si le trésor ne s'y trouve pas la fonction ne fait rien
 def prendreTresorL(labyrinthe,lin,col,numTresor):
-	if getTresor(getVal(lin, col)) ==  numTresor:
-		prendreTresor(getVal(lin, col))
+    if getTresor(getVal(lin, col)) ==  numTresor:
+        prendreTresor(getVal(lin, col))
 
 # enlève le joueur courant de la carte qui se trouve sur la case lin,col du plateau
 # si le joueur ne s'y trouve pas la fonction ne fait rien
@@ -120,28 +139,72 @@ def getCoordonneesTresorCourant(labyrinthe):
 
 # retourne sous la forme d'un couple (lin,col) la position du joueur courant sur le plateau
 def getCoordonneesJoueurCourant(labyrinthe):
-	for i in range(getNbColonnes(getPlateau(labyrinthe))):
+    for i in range(getNbColonnes(getPlateau(labyrinthe))):
 		for j in range(getNbLignes(getPlateau(labyrinthe))):
 			if possedePion(getVal(getPlateau(labyrinthe),i,j),getJoueurCourant(labyrinthe)):
 				return (i,j)
 
+
 # prend le pion numJoueur sur sur la carte se trouvant en position lin,col du plateau
 def prendrePionL(labyrinthe,lin,col,numJoueur):
     if possedePion(getVal(getPlateau(labyrinthe), lin, col), numJoueur):
-		prendrePion(getVal(getPlateau(labyrinthe), lin, col), numJoueur)
+        prendrePion(getVal(getPlateau(labyrinthe), lin, col), numJoueur)
 
 # pose le pion numJoueur sur sur la carte se trouvant en position lin,col du plateau
 def poserPionL(labyrinthe,lin,col,joueur):
     mettrePion(getVal(getPlateau(labyrinthe),lin,col),joueur)
 
+
+def marquageDirect(calque,mat,val,marque):
+    ans = False
+    for lig in range(getNbLignes(mat)):
+        for col in range(getNbColonnes(mat)):
+            if (getVal(calque, lig, col) == 0 and 
+            (  (passageEst(getVal(mat, lig, col), getVal(mat, lig, col+1)) and val == getVal(calque, lig, col+1))
+            or (passageOuest(getVal(mat, lig, col), getVal(mat, lig, col+1)) and val == getVal(calque, lig, col-1))
+            or (passageNord(getVal(mat, lig, col), getVal(mat, lig-1, col)) and val == getVal(calque, lig-1, col))
+            or (passageSud(getVal(mat, lig, col), getVal(mat, lig+1, col)) and val == getVal(calque, lig+1, col))
+            )):
+                setVal(calque, lig, col, marque)
+                ans = True
+    return ans      
+
+
+# verifie qu'il existe un chemin entre pos1 et pos2 dans la matrice mat
+def accessible(mat,pos1,pos2):
+    #initialisation du calque
+    calque = newMatrice(getNbLignes(mat), getNbColonnes(mat), 0)
+    setVal(calque, pos1[0], pos1[1], 1)
+    #propagation
+    pr = True
+    val = 1
+    while pr and getVal(calque, pos2[0], pos2[1]) == 0:
+        pr = marquageDirect(calque, mat, val, val + 1)
+        val += 1
+    return calque
+
+def cheminDecroissant(calque,pos1,pos2):
+    last = getVal(calque, pos2[0], pos2[1])-1
+    ans = [pos2]
+    while last != 0:
+        for lig, col in [(ans[-1][0]-1, ans[-1][1]),(ans[-1][0]+1, ans[-1][1]),(ans[-1][0], ans[-1][1]-1),(ans[-1][0], ans[-1][1]+1)]:
+            if getVal(calque, lig, col) == last:
+                ans.append((lig, col))
+                break
+        last -= 1
+    return ans
+
 # indique si il y a un chemin entre la case ligD,colD et la case ligA,colA du labyrinthe
 def accessible(labyrinthe,ligD,colD,ligA,colA):
-    pass
+    calque = accessible(getPlateau(labyrinthe), (ligD, colD), (ligA, colA))
+    return (getVal(calque, pos2[0], pos2[1]) != 0)
+
 
 # indique si il y a un chemin entre la case ligD,colD et la case ligA,colA du labyrinthe
 # mais la valeur de retour est None s'il n'y a pas de chemin, sinon c'est un chemin possible entre ces deux cases
 def accessibleDist(labyrinthe,ligD,colD,ligA,colA):
-    pass
+    calque = accessible(getPlateau(labyrinthe), (ligD, colD), (ligA, colA))
+    return cheminDecroissant(calque, (ligD, colD), (ligA, colA)) if getVal(calque, pos2[0], pos2[1]) != 0 else None
 
 # exécute une action de jeu de la phase 1
 # si action vaut 'T' => faire tourner la carte à jouer
