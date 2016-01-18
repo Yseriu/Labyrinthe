@@ -40,7 +40,10 @@ def changerPhase(labyrinthe):
 
 # indique combien de trésors il reste dans le labyrinthe
 def getNbTresors(labyrinthe):
-    pass
+	nbTresorRest=0
+    for i in range(getNbJoueurs(labyrinthe)):
+		nbTresorRest+=nbTresorsRestants(getLesJoueurs,i)
+	return nbTresorRest
 
 # retourne la structures qui gèrent les joueurs et leurs trésors
 def getLesJoueurs(labyrinthe):
@@ -77,7 +80,7 @@ def poserJoueurCourant(labyrinthe,lin,col):
 
 # retourne la carte amovible supplémentaire que le joueur courant doit joueur
 def getCarteAJouer(labyrinthe):
-    pass
+    return labyrinthe['carteAJouer']
 
 # fonction utilitaire qui permet de créer les cartes amovibles du jeu en y positionnant
 # aléatoirement nbTresor trésors
@@ -110,11 +113,17 @@ def getTresorCourant(labyrinthe):
 # retourne sous la forme d'un couple (lin,col) la position du trésor à trouver 
 # pour le joueur courant sur le plateau
 def getCoordonneesTresorCourant(labyrinthe):
-    pass
+    for i in range(getNbColonnes(getPlateau(labyrinthe))):
+		for j in range(getNbLignes(getPlateau(labyrinthe))):
+			if getTresor(getVal(getPlateau(labyrinthe),i,j))==getTresorCourant(labyrinthe):
+				return (i,j)
 
 # retourne sous la forme d'un couple (lin,col) la position du joueur courant sur le plateau
 def getCoordonneesJoueurCourant(labyrinthe):
-    pass
+	for i in range(getNbColonnes(getPlateau(labyrinthe))):
+		for j in range(getNbLignes(getPlateau(labyrinthe))):
+			if possedePion(getVal(getPlateau(labyrinthe),i,j),getJoueurCourant(labyrinthe)):
+				return (i,j)
 
 # prend le pion numJoueur sur sur la carte se trouvant en position lin,col du plateau
 def prendrePionL(labyrinthe,lin,col,numJoueur):
