@@ -27,7 +27,6 @@ def initPlateau(labyrinthe):
         setVal(getPlateau(labyrinthe), 6, i, Carte(False, False, True, False, t+2))
         setVal(getPlateau(labyrinthe), 0, i, Carte(True, False, False, False, t+3))
         t += 4
-    t += 1
     setVal(getPlateau(labyrinthe), 2, 2, Carte(False, False, False, True, t))
     setVal(getPlateau(labyrinthe), 2, 4, Carte(True, False, False, False, t+1))
     setVal(getPlateau(labyrinthe), 4, 2, Carte(False, False, True, False, t+2))
@@ -94,8 +93,8 @@ def nbTresorsRestantsJoueur(labyrinthe,numJoueur):
 # enlève le trésor numTresor sur la carte qui se trouve sur la case lin,col du plateau
 # si le trésor ne s'y trouve pas la fonction ne fait rien
 def prendreTresorL(labyrinthe,lin,col,numTresor):
-    if getTresor(getVal(lin, col)) ==  numTresor:
-        prendreTresor(getVal(lin, col))
+    if getTresor(getVal(getPlateau(labyrinthe), lin, col)) ==  numTresor:
+        prendreTresor(getVal(getPlateau(labyrinthe), lin, col))
 
 # enlève le joueur courant de la carte qui se trouve sur la case lin,col du plateau
 # si le joueur ne s'y trouve pas la fonction ne fait rien
@@ -128,7 +127,7 @@ def creerCartesAmovibles(tresorDebut,nbTresors):
     for _ in range(12):
         l.append(tourneAleatoire(Carte(False, True, False, True)))
     l = sorted(l, key=lambda k: random.randint(0, 100))
-    for i in range(tresorDebut, nbTresors):
+    for i in range(tresorDebut, nbTresors+1):
         print('Pose des tresors')
         mettreTresor(l[i], i)
     l = sorted(l, key=lambda k: random.randint(0, 100))
@@ -164,7 +163,7 @@ def jouerCarte(labyrinthe,direction,rangee):
 # Cette fonction tourne la carte à jouer dans le sens indiqué 
 # en paramètre (H horaire A antihoraire)
 def tournerCarte(labyrinthe,sens='H'):
-    tournerHoraire(labyrinte['carteAJouer']) if sens == 'H' else tournerAntiHoraire(labyrinte['carteAJouer'])
+    tournerHoraire(getCarteAJouer(labyrinthe)) if sens == 'H' else tournerAntiHoraire(getCarteAJouer(labyrinthe))
 
 # retourne le numéro du trésor à trouver pour le joueur courant
 def getTresorCourant(labyrinthe):
@@ -291,6 +290,8 @@ def finirTour(labyrinthe):
         tresorTrouve(getLesJoueurs(labyrinthe), getJoueurCourant(labyrinthe))
         x, y = getCoordonneesJoueurCourant(labyrinthe)
         prendreTresor(getVal(getPlateau(labyrinthe), x, y))
+        if nbTresorsRestantsJoueur(labyrinthe, getJoueurCourant(labyrinthe)) == 0:
+            return 2
     changerPhase(labyrinthe)
     changerJoueurCourant(labyrinthe)
     return ans

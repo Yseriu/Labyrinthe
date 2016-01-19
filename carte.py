@@ -155,21 +155,21 @@ def toChar(c):
 # s'il y a un passage entre ces deux cartes en passant par le nord
 def passageNord(carte1,carte2):
     if carte1 == None or carte2 == None: return False
-    return not murNord(carte1) and not murSud(carte2)
+    return (not murNord(carte1)) and (not murSud(carte2))
 # suppose que la carte2 est placée au sud de la carte1 et indique
 # s'il y a un passage entre ces deux cartes en passant par le sud
 def passageSud(carte1,carte2):
     if carte1 == None or carte2 == None: return False
-    return not murSud(carte1) and not murNord(carte2)
+    return (not murSud(carte1)) and (not murNord(carte2))
 
 # suppose que la carte2 est placée à l'ouest de la carte1 et indique
 # s'il y a un passage entre ces deux cartes en passant par l'ouest
 def passageOuest(carte1,carte2):
     if carte1 == None or carte2 == None: return False
-    return not murOuest(carte1) and not murEst(carte2)
+    return (not murOuest(carte1)) and (not murEst(carte2))
 
 # suppose que la carte2 est placée à l'est de la carte1 et indique
 # s'il y a un passage entre ces deux cartes en passant par l'est
 def passageEst(carte1,carte2):
     if carte1 == None or carte2 == None: return False
-    return not murEst(carte1) and not murOuest(carte2)
+    return (not murEst(carte1)) and (not murOuest(carte2))

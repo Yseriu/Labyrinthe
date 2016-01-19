@@ -63,7 +63,7 @@ def decalageColonneEnHaut(matrice, numCol, nouvelleValeur=0):
 # la fonction retourne la valeur de la case "ejectée" par le décalage
 def decalageColonneEnBas(matrice, numCol, nouvelleValeur=0):
     ans = getVal(matrice, getNbLignes(matrice)-1, numCol)
-    for i in range(getNbLignes(matrice)-2, 0, -1):
+    for i in range(getNbLignes(matrice)-2, -1, -1):
         setVal(matrice, i+1, numCol, getVal(matrice, i, numCol))
     setVal(matrice, 0, numCol, nouvelleValeur)
     return ans
