@@ -42,7 +42,7 @@ def murOuest(c):
 
 # retourne la liste des pions se trouvant sur la carte
 def getListePions(c):
-    return c['pions']
+    return list(c['pions'])
 
 # retourne le nombre de pions se trouvant sur la carte
 def getNbPions(c):
@@ -54,11 +54,14 @@ def possedePion(c,pion):
 
 # retourne le codage de la liste des pions
 def getPions(c):
-    return c['pions']
+    return list(c['pions'])
 
 # affecte les pions de la cartes en utilisant directement le codage de la liste des pions
-def setPions(c,pions):
-    c['pions'] = pions
+def setPions(c, pions):
+	c['pions'] = set(pions)
+
+def addPions(c,pions):
+    c['pions'] = c['pions'] | set(pions)
 
 # retourne la valeur du trésor qui se trouve sur la carte (0 si pas de trésor)
 def getTresor(c):
@@ -132,16 +135,16 @@ def coderMurs(c):
 def decoderMurs(c,code):
     if code > 8:
         code -= 8
-        c['nord'] = True
+        c['ouest'] = True
     if code > 4:
         code -= 4
-        c['est'] = True
+        c['sud'] = True
     if code > 2:
         code -= 2
-        c['sud'] = True
+        c['est'] = True
     if code > 1:
         code -= 1
-        c['ouest'] = True
+        c['nord'] = True
     return c
 
 # fournit le caractère semi graphique correspondant à la carte (voir la variable listeCartes au début de ce script)

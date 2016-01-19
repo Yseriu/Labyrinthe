@@ -110,11 +110,10 @@ def animationChemin(lmt,chemin, joueur,pause=0.1):
 # dans le cas où x vaut une des quatre autres valeur, y doit valoir 1, 3 ou 5
 # c'est à dire le numéro de la ligne ou de la colonne où insérer la carte
 def saisirOrdre(lmt):
-    valide = False
-    while not valide:
+    while 1:
         x = input('Que faire maintenant ? [T]ourner ou inserer [N,E,S,O] ?')
         if len(x) > 0:
-            if x.lower() == 't': return (x, 0)
+            if x.lower() == 't': return ('t', 't')
             elif x in 'neso': 
                 y = input('Dans quelle ' + ('ligne' if x in 'eo' else 'colonne') + ' ?')
                 try:
@@ -132,14 +131,25 @@ def saisirOrdre(lmt):
 def saisirDeplacement(lmt):
     possible = False
     while not possible:
-        x = input()
+        print(getCoordonneesJoueurCourant(getLabyrinthe(lmt)))
+        x = input("Ou aller ?")
         if len(x) >= 3:
             x, y = x[0], x[2]
-            if x in range(1, 8) and y in range(1, 8):
-                x -= 1
-                y -= 1
+            try:
+                x = int(x)
+                y = int(y)
+            except ValueError:
+                pass
+            if x in range(7) and y in range(7):
                 # vérifier la possibilité de parcourir ce chemin
-                possible = accessible(getLabyrinthe(lmt), getCoordonneesJoueurCourant(getLabyrinthe(lmt))[0], getCoordonneesJoueurCourant(getLabyrinthe(lmt))[0], x, y)
+                possible = accessible(getLabyrinthe(lmt), getCoordonneesJoueurCourant(getLabyrinthe(lmt))[0], getCoordonneesJoueurCourant(getLabyrinthe(lmt))[1], x, y)
+                if not possible: print("Ehhh non, pas de chemin vers", x, y)
+            else:
+                print("Pas une cellule")
+        else:
+            print("pas assez de coordonnées")
+    print("Done")
+    return accessibleDistJoueurCourant(getLabyrinthe(lmt), x, y)
         
 # demarre la partie en mode texte
 def demarrer(lmt):

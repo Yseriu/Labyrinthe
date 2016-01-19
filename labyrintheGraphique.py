@@ -179,7 +179,7 @@ class LabyrintheGraphique(object):
         (xp,yp)=chemin.pop(0)
         for (x,y) in chemin:
             prendrePionL(self.labyrinthe,xp,yp,joueur)
-            mettrePionL(self.labyrinthe,x,y,joueur)
+            poserPionL(self.labyrinthe,x,y,joueur)
             self.afficheJeu()
             time.sleep(pause)
             xp,yp=x,y

@@ -38,26 +38,35 @@ def setVal(matrice,lig,col,val):
 # dans la case ainsi libérée
 # la fonction retourne la valeur de la case "ejectée" par le décalage
 def decalageLigneAGauche(matrice, numLig, nouvelleValeur=0):
-    pass
+    matrice[numLig].append(nouvelleValeur)
+    return matrice[numLig].pop(0)
 
 # decale la ligne numLig d'une case vers la droite en insérant la nouvelleValeur
 # dans la case ainsi libérée
 # la fonction retourne la valeur de la case "ejectée" par le décalage
 def decalageLigneADroite(matrice, numLig, nouvelleValeur=0):
-    pass
+    matrice[numLig].insert(0, nouvelleValeur)
+    return matrice[numLig].pop()
 
 # decale la colonne numCol d'une case vers le haut en insérant la nouvelleValeur
 # dans la case ainsi libérée
 # la fonction retourne la valeur de la case "ejectée" par le décalage
 def decalageColonneEnHaut(matrice, numCol, nouvelleValeur=0):
-    pass
-
-
+    ans = getVal(matrice, 0, numCol)
+    for i in range(1, getNbColonnes(matrice)):
+        setVal(matrice, i-1, numCol, getVal(matrice, i, numCol))
+    setVal(matrice, getNbLignes(matrice)-1, numCol, nouvelleValeur)
+    return ans
+    
 # decale la colonne numCol d'une case vers le haut en insérant la nouvelleValeur
 # dans la case ainsi libérée
 # la fonction retourne la valeur de la case "ejectée" par le décalage
 def decalageColonneEnBas(matrice, numCol, nouvelleValeur=0):
-    pass
+    ans = getVal(matrice, getNbLignes(matrice)-1, numCol)
+    for i in range(getNbLignes(matrice)-2, 0, -1):
+        setVal(matrice, i+1, numCol, getVal(matrice, i, numCol))
+    setVal(matrice, 0, numCol, nouvelleValeur)
+    return ans
 
 
 #-----------------------------------------
@@ -132,4 +141,11 @@ def afficheMatrice(matrice,tailleCellule=4):
             print(str(getVal(matrice,i,j)).rjust(tailleCellule)+'|',end='')
         afficheLigneSeparatrice(matrice,tailleCellule)
     print()
-    
+
+if __name__ == '__main__':
+    m = Matrice(4, 4, 8)
+    decalageColonneEnBas(m, 0, 0)
+    decalageColonneEnHaut(m, 3, 3)
+    decalageLigneADroite(m, 1, 1)
+    decalageLigneAGauche(m, 2, 2)
+    afficheMatrice(m)
