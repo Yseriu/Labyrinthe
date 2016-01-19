@@ -118,7 +118,6 @@ def setCarteAJouer(labyrinthe, c):
 # aléatoirement nbTresor trésors
 # la fonction retourne la liste, mélangée aléatoirement, des cartes ainsi créées
 def creerCartesAmovibles(tresorDebut,nbTresors):
-    print(tresorDebut, nbTresors)
     l = []
     for _ in range(16):
         l.append(tourneAleatoire(Carte(False, False, True, True)))
@@ -128,7 +127,6 @@ def creerCartesAmovibles(tresorDebut,nbTresors):
         l.append(tourneAleatoire(Carte(False, True, False, True)))
     l = sorted(l, key=lambda k: random.randint(0, 100))
     for i in range(tresorDebut, nbTresors+1):
-        print('Pose des tresors')
         mettreTresor(l[i], i)
     l = sorted(l, key=lambda k: random.randint(0, 100))
     return l
@@ -186,7 +184,7 @@ def getCoordonneesJoueurCourant(labyrinthe):
     print("Joueur non trouvé")
 
 
-# prend le pion numJoueur sur sur la carte se trouvant en position lin,col du plateau
+# prend le pion numJoueur sur sur la carte se trouvant en position (lin, col) du plateau
 def prendrePionL(labyrinthe,lin,col,numJoueur):
     if possedePion(getVal(getPlateau(labyrinthe), lin, col), numJoueur):
         prendrePion(getVal(getPlateau(labyrinthe), lin, col), numJoueur)
@@ -224,17 +222,32 @@ def accessible2(mat,pos1,pos2):
         val += 1
     return calque
 
-def cheminDecroissant(calque,pos1,pos2):
+def passage(plateau, ligD, colD, ligA, colA):
+    if ligA == ligD:
+        # meme ligne
+        if colD == (colA + 1):
+            return passageOuest(getVal(plateau, ligD, colD), getVal(plateau, ligA, colA))
+        if colD == (colA - 1):
+            return passageEst(getVal(plateau, ligD, colD), getVal(plateau, ligA, colA))
+    if colD == colA:
+        # meme colonne
+        if ligD == (ligA + 1):
+            return passageNord(getVal(plateau, ligD, colD), getVal(plateau, ligA, colA))
+        if ligD == (ligA - 1):
+            return passageSud(getVal(plateau, ligD, colD), getVal(plateau, ligA, colA))
+    return False
+
+def cheminDecroissant(calque, pos1, pos2, plateau):
     last = getVal(calque, pos2[0], pos2[1])-1
     ans = [pos2]
     while last != 0:
         for lig, col in [(ans[-1][0]-1, ans[-1][1]),(ans[-1][0]+1, ans[-1][1]),(ans[-1][0], ans[-1][1]-1),(ans[-1][0], ans[-1][1]+1)]:
-            if getVal(calque, lig, col) == last:
+            if getVal(calque, lig, col) == last and passage(plateau, lig, col, ans[-1][0], ans[-1][1]):
                 ans.append((lig, col))
                 break
         last -= 1
     ans.reverse()
-    print(ans)
+    #print(ans)
     return ans
 
 # indique si il y a un chemin entre la case ligD,colD et la case ligA,colA du labyrinthe
@@ -247,7 +260,7 @@ def accessible(labyrinthe,ligD,colD,ligA,colA):
 # mais la valeur de retour est None s'il n'y a pas de chemin, sinon c'est un chemin possible entre ces deux cases
 def accessibleDist(labyrinthe,ligD,colD,ligA,colA):
     calque = accessible2(getPlateau(labyrinthe), (ligD, colD), (ligA, colA))
-    return cheminDecroissant(calque, (ligD, colD), (ligA, colA)) if (getVal(calque, ligA, colA) != 0) else None
+    return cheminDecroissant(calque, (ligD, colD), (ligA, colA), getPlateau(labyrinthe)) if (getVal(calque, ligA, colA) != 0) else None
 
 # exécute une action de jeu de la phase 1
 # si action vaut 'T' => faire tourner la carte à jouer
@@ -260,7 +273,10 @@ def accessibleDist(labyrinthe,ligD,colD,ligA,colA):
 # 3 si action et rangee sont des entiers positifs
 # 4 dans tous les autres cas
 def executerActionPhase1(labyrinthe,action,rangee):
-    action = action.lower()
+    try:
+        action = action.lower()
+    except AttributeError:
+        return 3
     if action == 't':
         tournerHoraire(getCarteAJouer(labyrinthe))
         return 0
@@ -268,7 +284,6 @@ def executerActionPhase1(labyrinthe,action,rangee):
         if coupInterdit(labyrinthe, action, rangee): return 2
         jouerCarte(labyrinthe, action, rangee)
         return 1
-    if action is int and rangee is int and action >= 0 and rangee >= 0: return 3
     return 4
 
 # verifie si le joueur courant peut accéder la case ligA,colA
