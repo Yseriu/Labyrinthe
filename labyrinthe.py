@@ -20,19 +20,21 @@ def initPlateau(labyrinthe):
     setVal(getPlateau(labyrinthe), 6, 0, Carte(False, False, True, True, 0, [2]))
     setVal(getPlateau(labyrinthe), 0, 6, Carte(True, True, False, False, 0, [3] if getNbJoueurs(labyrinthe) >= 3 else []))
     setVal(getPlateau(labyrinthe), 6, 6, Carte(False, True, True, False, 0, [4] if getNbJoueurs(labyrinthe) >= 4 else []))
-    t = 1
+
+    tl = list(range(1, getNbTresors(labyrinthe)+1))
+    random.shuffle(tl)
+
     for i in [2, 4]:
-        setVal(getPlateau(labyrinthe), i, 0, Carte(False, False, False, True, t))
-        setVal(getPlateau(labyrinthe), i, 6, Carte(False, True, False, False, t+1))
-        setVal(getPlateau(labyrinthe), 6, i, Carte(False, False, True, False, t+2))
-        setVal(getPlateau(labyrinthe), 0, i, Carte(True, False, False, False, t+3))
-        t += 4
-    setVal(getPlateau(labyrinthe), 2, 2, Carte(False, False, False, True, t))
-    setVal(getPlateau(labyrinthe), 2, 4, Carte(True, False, False, False, t+1))
-    setVal(getPlateau(labyrinthe), 4, 2, Carte(False, False, True, False, t+2))
-    setVal(getPlateau(labyrinthe), 4, 4, Carte(False, True, False, False, t+3))
-    t += 4
-    amov = creerCartesAmovibles(t, getNbTresors(labyrinthe))
+        setVal(getPlateau(labyrinthe), i, 0, Carte(False, False, False, True, tl.pop()))
+        setVal(getPlateau(labyrinthe), i, 6, Carte(False, True, False, False, tl.pop()))
+        setVal(getPlateau(labyrinthe), 6, i, Carte(False, False, True, False, tl.pop()))
+        setVal(getPlateau(labyrinthe), 0, i, Carte(True, False, False, False, tl.pop()))
+    setVal(getPlateau(labyrinthe), 2, 2, Carte(False, False, False, True, tl.pop()))
+    setVal(getPlateau(labyrinthe), 2, 4, Carte(True, False, False, False, tl.pop()))
+    setVal(getPlateau(labyrinthe), 4, 2, Carte(False, False, True, False, tl.pop()))
+    setVal(getPlateau(labyrinthe), 4, 4, Carte(False, True, False, False, tl.pop()))
+
+    amov = creerCartesAmovibles(tl)
     for i in range(getNbLignes(getPlateau(labyrinthe))):
         for j in range(getNbColonnes(getPlateau(labyrinthe))):
             if getVal(getPlateau(labyrinthe), i, j) == None:
@@ -117,7 +119,7 @@ def setCarteAJouer(labyrinthe, c):
 # fonction utilitaire qui permet de créer les cartes amovibles du jeu en y positionnant
 # aléatoirement nbTresor trésors
 # la fonction retourne la liste, mélangée aléatoirement, des cartes ainsi créées
-def creerCartesAmovibles(tresorDebut,nbTresors):
+def creerCartesAmovibles(tresorListe):
     l = []
     for _ in range(16):
         l.append(tourneAleatoire(Carte(False, False, True, True)))
@@ -125,10 +127,12 @@ def creerCartesAmovibles(tresorDebut,nbTresors):
         l.append(tourneAleatoire(Carte(False, False, False, True)))
     for _ in range(12):
         l.append(tourneAleatoire(Carte(False, True, False, True)))
-    l = sorted(l, key=lambda k: random.randint(0, 100))
-    for i in range(tresorDebut, nbTresors+1):
-        mettreTresor(l[i], i)
-    l = sorted(l, key=lambda k: random.randint(0, 100))
+    random.shuffle(l)
+    i = 0
+    while tresorListe:
+        mettreTresor(l[i], tresorListe.pop())
+        i += 1
+    random.shuffle(l)
     return l
 
 # fonction qui retourne True si le coup proposé correspond au coup interdit

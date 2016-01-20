@@ -5,11 +5,11 @@ import random
 import os
 
 class Labyrinthe(object):
-# permet de créer un labyrinthe avec nbJoueurs joueurs, nbTresors trésors
-# chacun des joueurs aura au plus nbTresorMax à trouver
-# si ce dernier paramètre est à 0, on distribuera le maximum de trésors possible
-# à chaque joueur en restant équitable
-# un joueur courant est choisi et la phase est initialisée
+    # permet de créer un labyrinthe avec nbJoueurs joueurs, nbTresors trésors
+    # chacun des joueurs aura au plus nbTresorMax à trouver
+    # si ce dernier paramètre est à 0, on distribuera le maximum de trésors possible
+    # à chaque joueur en restant équitable
+    # un joueur courant est choisi et la phase est initialisée
     def __init__(self, nbJoueurs=2, nbTresors=24, nbTresorMax=0):
         self.phase = 1
         self.current = random.randint(1, nbJoueurs)
@@ -24,19 +24,21 @@ class Labyrinthe(object):
         self.getPlateau().setVal(6, 0, Carte(False, False, True, True, 0, [2]))
         self.getPlateau().setVal(0, 6, Carte(True, True, False, False, 0, [3] if self.getNbJoueurs() >= 3 else []))
         self.getPlateau().setVal(6, 6, Carte(False, True, True, False, 0, [4] if self.getNbJoueurs() >= 4 else []))
-        t = 1
+
+        tl = list(range(1, self.getNbTresors()+1))
+        random.shuffle(tl)
+
         for i in [2, 4]:
-            self.getPlateau().setVal(i, 0, Carte(False, False, False, True, t))
-            self.getPlateau().setVal(i, 6, Carte(False, True, False, False, t+1))
-            self.getPlateau().setVal(6, i, Carte(False, False, True, False, t+2))
-            self.getPlateau().setVal(0, i, Carte(True, False, False, False, t+3))
-            t += 4
-        self.getPlateau().setVal(2, 2, Carte(False, False, False, True, t))
-        self.getPlateau().setVal(2, 4, Carte(True, False, False, False, t+1))
-        self.getPlateau().setVal(4, 2, Carte(False, False, True, False, t+2))
-        self.getPlateau().setVal(4, 4, Carte(False, True, False, False, t+3))
-        t += 4
-        amov = self.creerCartesAmovibles(t, self.getNbTresors())
+            self.getPlateau().setVal(i, 0, Carte(False, False, False, True, tl.pop()))
+            self.getPlateau().setVal(i, 6, Carte(False, True, False, False, tl.pop()))
+            self.getPlateau().setVal(6, i, Carte(False, False, True, False, tl.pop()))
+            self.getPlateau().setVal(0, i, Carte(True, False, False, False, tl.pop()))
+        self.getPlateau().setVal(2, 2, Carte(False, False, False, True, tl.pop()))
+        self.getPlateau().setVal(2, 4, Carte(True, False, False, False, tl.pop()))
+        self.getPlateau().setVal(4, 2, Carte(False, False, True, False, tl.pop()))
+        self.getPlateau().setVal(4, 4, Carte(False, True, False, False, tl.pop()))
+
+        amov = self.creerCartesAmovibles(tl)
         for i in range(self.getPlateau().getNbLignes()):
             for j in range(self.getPlateau().getNbColonnes()):
                 if self.getPlateau().getVal(i, j) is None:
@@ -119,9 +121,9 @@ class Labyrinthe(object):
         return self
     
     # fonction utilitaire qui permet de créer les cartes amovibles du jeu en y positionnant
-    # aléatoirement nbTresor trésors
+    # aléatoirement les tresors passes en parametre
     # la fonction retourne la liste, mélangée aléatoirement, des cartes ainsi créées
-    def creerCartesAmovibles(self, tresorDebut, nbTresors):
+    def creerCartesAmovibles(self, tresorListe):
         l = []
         for _ in range(16):
             l.append(Carte(False, False, True, True).tourneAleatoire())
@@ -129,10 +131,12 @@ class Labyrinthe(object):
             l.append(Carte(False, False, False, True).tourneAleatoire())
         for _ in range(12):
             l.append(Carte(False, True, False, True).tourneAleatoire())
-        l = sorted(l, key=lambda k: random.randint(0, 100))
-        for i in range(tresorDebut, nbTresors+1):
-            l[i].mettreTresor(i)
-        l = sorted(l, key=lambda k: random.randint(0, 100))
+        random.shuffle(l)
+        i = 0
+        while tresorListe:
+            l[i].mettreTresor(tresorListe.pop())
+            i += 1
+        random.shuffle(l)
         return l
     
     # fonction qui retourne True si le coup proposé correspond au coup interdit
@@ -252,7 +256,7 @@ class Labyrinthe(object):
             self.getLesJoueurs().tresorTrouve(self.getJoueurCourant())
             x, y = self.getCoordonneesJoueurCourant()
             self.getPlateau().getVal(x, y).prendreTresor()
-            if self.nbTresorsRestantsJoueur(self.getJoueurCourant()) == 0:
+            if self.nbTresorsRestants(self.getJoueurCourant()) == 0:
                 return 2
         self.changerPhase()
         self.changerJoueurCourant()

@@ -22,7 +22,7 @@ def initTresor(joueurs):
     for j in range(1, joueurs['NbJoueurs']+1):
         for _ in range(parJoueurs):
             tres.append(j)
-    tres = sorted(tres, key=lambda k: random.randint(0, 100))
+    random.shuffle(tres)
     tres.insert(0, 0)
     joueurs['owner'] = tres
     return joueurs

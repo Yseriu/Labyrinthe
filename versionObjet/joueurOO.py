@@ -9,7 +9,7 @@ import random
 #  * found : la liste des trésor : valeur -> boolean trouvé ou non
 class Joueurs(object):
     def __init__(self,nbJoueurs=2, nbTresors=24, nbTresorMax=0):
-        nbTr = max((min(nbTresors, nbTresorMax*nbJoueurs) if nbTresorMax != 0 else nbTresors), 13)
+        nbTr = max((min(nbTresors, nbTresorMax*nbJoueurs) if nbTresorMax != 0 else nbTresors), 12)
         self.NbJoueurs = nbJoueurs
         self.owner = [0] * nbTr
         self.found = [False] * nbTr
@@ -21,10 +21,10 @@ class Joueurs(object):
     def initTresor(self):
         parJoueurs = len(self.owner) // self.NbJoueurs
         tres = []
-        for j in range(1, self.NbJoueurs +1):
+        for j in range(1, self.NbJoueurs + 1):
             for _ in range(parJoueurs):
                 tres.append(j)
-        tres = sorted(tres, key=lambda k: random.randint(0, 100))
+        random.shuffle(tres)
         tres.insert(0, 0)
         self.owner = tres
         return self

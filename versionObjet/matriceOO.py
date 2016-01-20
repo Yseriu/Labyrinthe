@@ -1,15 +1,14 @@
 import random
 
-#-----------------------------------------
+# -----------------------------------------
 # contructeur et accesseurs
-#-----------------------------------------
+# -----------------------------------------
 
-#crée une matrice de nbLignes lignes sur nbColonnes colonnes en mettant valeurParDefaut
+# crée une matrice de nbLignes lignes sur nbColonnes colonnes en mettant valeurParDefaut
 # dans chacune des cases
 class Matrice(object):
     def __init__(self,nbLignes,nbColonnes,valeurParDefaut=0):
         self.matrice=[[valeurParDefaut for _ in range(nbColonnes)] for _ in range(nbLignes)]
-        #return [[valeurParDefaut for _ in range(nbColonnes)] for _ in range(nbLignes)]
 
     # retourne le nombre de ligne de la matrice
     def getNbLignes(self):
@@ -30,11 +29,9 @@ class Matrice(object):
         self.matrice[lig][col] = val
         return self
 
-
-
-    #------------------------------------------
+    # ------------------------------------------
     # decalages A IMPLEMENTER
-    #------------------------------------------
+    # ------------------------------------------
 
     # decale la ligne numLig d'une case vers la gauche en insérant la nouvelleValeur
     # dans la case ainsi libérée
@@ -71,10 +68,10 @@ class Matrice(object):
         return ans
 
 
-    #-----------------------------------------
+    # -----------------------------------------
     # entrées sorties
-    #-----------------------------------------
-    #sauvegarde une matrice en mode texte
+    # -----------------------------------------
+    # sauvegarde une matrice en mode texte
     # ATTENTION NE MARCHE QUE POUR DES MATRICE CONTENANT DES TYPES SIMPLES
     def sauveMatrice(self,nomFic):
         fic=open(nomFic,'w')
