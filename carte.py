@@ -126,9 +126,9 @@ def tourneAleatoire(c):
 # correspondant à la carte dans la liste listeCartes au début de ce fichier
 def coderMurs(c):
     x = 1 if murNord(c) else 0
-    x +=  2 if murEst(c) else 0
-    x +=  4 if murSud(c) else 0
-    x +=  8 if murOuest(c) else 0
+    x += 2 if murEst(c) else 0
+    x += 4 if murSud(c) else 0
+    x += 8 if murOuest(c) else 0
     return x
 
 # positionne les mur d'une carte en fonction du code décrit précédemment
