@@ -12,25 +12,25 @@ def Joueurs(nbJoueurs=2, nbTresors=24, nbTresorMax=0):
     nbTr = max((min(nbTresors, nbTresorMax*nbJoueurs) if nbTresorMax != 0 else nbTresors), 13)
     j = {'NbJoueurs' : nbJoueurs, 'owner' : [0] * nbTr, 'found' : [False] * nbTr}
     initTresor(j)
-    j['found'].insert(0, None)
+    j['found'].insert(0, None)# pas de tresor 0
     return j
 
 # attribue effectivement les trésors de manière aléatoire
 def initTresor(joueurs):
-    parJoueurs = len(joueurs['owner']) // joueurs['NbJoueurs']
+    parJoueurs = len(joueurs['owner']) // joueurs['NbJoueurs']#calcul le nombre de trésors par joueur
     tres = []
-    for j in range(1, joueurs['NbJoueurs']+1):
+    for j in range(1, joueurs['NbJoueurs']+1):#pour j prenant successivement pour le valeur le numero de chaque joueur
         for _ in range(parJoueurs):
-            tres.append(j)
-    random.shuffle(tres)
-    tres.insert(0, 0)
-    joueurs['owner'] = tres
+            tres.append(j)# on ajoute autant de tresor que la valeur de parJoueur pour chaque joueur
+    random.shuffle(tres)#mélange les tresors
+    tres.insert(0, 0)#pas de tresor 0
+    joueurs['owner'] = tres#attribut la liste des propriétaires des treésors à la clé owner
     return joueurs
 
 # retourne le numéro du prochain trésor à trouver pour le joueur numJoueur
 # None s'il n'y a pas de prochain trésor
 def prochainTresor(joueurs,numJoueur):
-    for i in range(1, len(joueurs['owner'])):
+    for i in range(1, len(joueurs['owner'])):# pour i allant 
         if joueurs['owner'][i] == numJoueur and not joueurs['found'][i]: return i
     return None
 

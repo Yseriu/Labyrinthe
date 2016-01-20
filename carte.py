@@ -17,12 +17,13 @@ def Carte( nord, est, sud, ouest, tresor=0, pions=[]):
             'tresor': tresor,
             'pions': set(pions)}
 # retourne un booléen indiquant si la carte est valide ou non c'est à dire qu'elle a un ou deux murs
+# compte le nombre de murs et regarde si se nombre vaut 1 ou 2
 def estValide(c):
     x = 1 if murNord(c) else 0
     x +=  1 if murSud(c) else 0
     x +=  1 if murEst(c) else 0
     x +=  1 if murOuest(c) else 0
-    return x in [1, 2]
+    return x in [1, 2] 
 
 # retourne un booléen indiquant si la carte possède un mur au nord
 def murNord(c):
