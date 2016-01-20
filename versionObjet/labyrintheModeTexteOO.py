@@ -80,7 +80,7 @@ class LabyrintheModeTexte(object):
         (xp,yp)=chemin.pop(0)
         for (x,y) in chemin:
             self.labyrinthe.prendrePion(xp,yp,joueur)
-            self.labyrinthe.mettrePion(x,y,joueur)
+            self.labyrinthe.poserPion(x,y,joueur)
             self.afficheLabyrinthe(sauts=1)
             time.sleep(pause)
             xp,yp=x,y
@@ -148,11 +148,11 @@ class LabyrintheModeTexte(object):
                     sys.exit()
                 else:
                     self.labyrinthe.jouerCarte(ordre[0].upper(),int(ordre[1]))
-                    self.afficheLabyrinthe("La carte a été insérée en "+ordre[0].upper()+" "+ordre[1])                
+                    self.afficheLabyrinthe("La carte a été insérée en "+ordre[0].upper()+" "+str(ordre[1]))
                     finOrdre=True
             
             #xA,yA=self.saisirDeplacement()
-            chemin=self.saisirDeplacementAnime()
+            chemin=self.saisirDeplacement()
             jc=self.labyrinthe.getJoueurCourant()
             xA,yA=self.animationChemin(chemin,jc)
             c=self.labyrinthe.plateau.getVal(xA,yA)
