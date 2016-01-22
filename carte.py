@@ -59,7 +59,7 @@ def getPions(c):
 
 # affecte les pions de la cartes en utilisant directement le codage de la liste des pions
 def setPions(c, pions):
-	c['pions'] = set(pions)
+    c['pions'] = set(pions)
 
 def addPions(c,pions):
     c['pions'] = c['pions'] | set(pions)

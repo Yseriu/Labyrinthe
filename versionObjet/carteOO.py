@@ -150,7 +150,26 @@ class Carte(object):
     # fournit le caractère semi graphique correspondant à la carte (voir la variable listeCartes au début de ce script)
     def toChar(self):
         return listeCartes[self.coderMurs()]
-    
+
+    # Ces fonctions sont toujours statiques : elles comparent deux cartes, nous avons donc choisi de les laisser statiques
+    # Cependant, leur version objet a également été écrite, la voici
+    #
+    # def passageNord(self,carte2):
+    #     if carte2 == None: return False
+    #     return (not self.murNord()) and (not carte2.murSud())
+    #
+    # def passageSud(self,carte2):
+    #     if carte2 == None: return False
+    #     return (not self.murSud()) and (not carte2.murNord())
+    #
+    # def passageOuest(self,carte2):
+    #     if carte2 == None: return False
+    #     return (not self.murOuest()) and (not carte2.murEst())
+    #
+    # def passageEst(self,carte2):
+    #     if carte2 == None: return False
+    #     return (not self.murEst()) and (not carte2.murOuest())
+
 # suppose que la carte2 est placée au nord de la carte1 et indique
 # s'il y a un passage entre ces deux cartes en passant par le nord
 def passageNord(carte1,carte2):

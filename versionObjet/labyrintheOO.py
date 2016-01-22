@@ -105,7 +105,7 @@ class Labyrinthe(object):
     # enlève le joueur courant de la carte qui se trouve sur la case lin,col du plateau
     # si le joueur ne s'y trouve pas la fonction ne fait rien
     def prendreJoueurCourant(self, lin, col):
-        self.prendrePionL(lin, col, self.getJoueurCourant())
+        self.prendrePion(lin, col, self.getJoueurCourant())
     
     # pose le joueur courant de la carte qui se trouve sur la case lin,col du plateau
     # si le joueur s'y trouve déjà la fonction ne fait rien
