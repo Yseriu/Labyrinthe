@@ -3,8 +3,8 @@ import pygame
 import time
 import sys
 import os
+from easygui import indexbox
 
-       
 AUCUNE=0
 ALPHA=1
 NUMERIQUE=2
@@ -297,10 +297,11 @@ class LabyrintheGraphique(object):
         pygame.quit()
 
 print("Bienvenue dans le jeu du labyrinthe")
-nbJoueurs=input("Combien de joueurs? ")
-while nbJoueurs not in ['1','2','3','4']:
-    print("Le nombre de joueurs doit être compris entre 1 et 4")
-    nbJoueurs=input("Combien de joueurs? ")
+# nbJoueurs=input("Combien de joueurs? ")
+# while nbJoueurs not in ['1','2','3','4']:
+#     print("Le nombre de joueurs doit être compris entre 1 et 4")
+#     nbJoueurs=input("Combien de joueurs? ")
+nbJoueurs = indexbox("Combien de joueurs", choices=('1', '2', '3', '4')) +1
 l=Labyrinthe(int(nbJoueurs))
 g=LabyrintheGraphique(l)
 g.demarrer()
